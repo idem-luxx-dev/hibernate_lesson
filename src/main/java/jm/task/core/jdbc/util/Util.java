@@ -1,5 +1,10 @@
 package jm.task.core.jdbc.util;
 
+import jm.task.core.jdbc.model.User;
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -13,6 +18,7 @@ public class Util {
     // реализуйте настройку соеденения с БД
     private static Connection connection = null;
     private static Util inst = getInstace();
+    private static SessionFactory sessionFactory;
 
     public Util() {
         try {
@@ -38,7 +44,6 @@ public class Util {
 
     }
 
-
     public static Connection newConnection() throws SQLException, IOException {
 
         Properties props = new Properties();
@@ -53,5 +58,25 @@ public class Util {
         String password = props.getProperty("db.password");
 
         return DriverManager.getConnection(url, username, password);
+    }
+
+    public static SessionFactory getSessionFactory() throws HibernateException {
+
+        try {
+            Properties props = new Properties();
+            props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("hib.properties"));
+
+            Configuration configuration = new Configuration();
+            configuration.setProperties(props);
+            configuration.addAnnotatedClass(User.class);
+            sessionFactory = configuration.buildSessionFactory();
+
+
+        }
+        catch (Exception ex) {
+            throw new ExceptionInInitializerError(ex);
+        }
+
+        return sessionFactory;
     }
 }

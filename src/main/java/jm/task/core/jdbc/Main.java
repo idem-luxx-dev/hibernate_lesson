@@ -12,18 +12,20 @@ public class Main {
         // реализуйте алгоритм здесь
         service.createUsersTable();
 
+
         service.saveUser("peter","parker", (byte) 18);
         service.saveUser("j.j.","jameson", (byte) 54);
         service.saveUser("doctor","octopus", (byte) 37);
         service.saveUser("cat","woman", (byte) 22);
 
-        service.removeUserById(1);
+        service.removeUserById(2);
 
         List<User> users = service.getAllUsers();
         for(User u : users) {
             System.out.println(u.toString());
         }
         service.cleanUsersTable();
+
         service.dropUsersTable();
     }
 }
